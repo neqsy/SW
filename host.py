@@ -2,7 +2,7 @@ import socket
 import subprocess
 import os
 
-PORT = 65000
+PORT = 65002
 FRAME = 1024
 "wiadomość  bitów, pierwszy bit to numer funkcji"
 
@@ -13,7 +13,7 @@ def functions(message):
         pass
     if f == 2:
         cmd = "amixer -D pulse get Master | awk -F 'Left:|[][]' '{ print $3 }' | tr -d '%' | tr -d '\n' > temp"
-        subprocess.call(cmd, shell=True)
+        subprocess.run(cmd, shell=True)
         with open("temp", 'r') as file:
             vol = file.read()
         os.remove("temp")
@@ -22,7 +22,17 @@ def functions(message):
         "test"
         return "random text"
     if f == 4:
-        pass
+        number = int(message[1])
+        commands = ["xdg-open https://www.pk.edu.pl/index.php?lang=pl", # odpala przegladarke
+                    "code",                                             # odpala vscode
+                    "xdg-open http://elf2.pk.edu.pl/",                  # i to tez
+                    "gnome-terminal -- vi",                             # otwiera vi
+                    "spotify & disown",                                 # otwiera spotify
+                    "date",                                             # date
+                    "cal",                                              # odpala kalendarz
+                    "killall -I python3 plytka.py"]                     # wylancza
+        subprocess.run(commands[number], shell=True)
+        return "4"
     if f == 5:
         pass
     if f == 6:
@@ -38,9 +48,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as host_socket:
         data = ''
         while True:
             msg = connection.recv(FRAME)
-            print(msg)
+            #print(msg)
             msg = msg.decode("utf-8")
-            print(msg)
+            #print(msg)
             data += msg
             if len(data) > 0:
                 func = functions(data)

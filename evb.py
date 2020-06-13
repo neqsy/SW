@@ -12,7 +12,7 @@ class Evb(tkinter.Frame):
     def __init__(self, main, connection):
         tkinter.Frame.__init__(self, main)
         self.__main_window = main
-        self.__main_window.geometry("1490x910")
+        self.__main_window.geometry("1000x612")
         self.__main_window.resizable(0, 0)
         self.__main_window.title('evb')
         self.__connection = connection
@@ -35,45 +35,45 @@ class Evb(tkinter.Frame):
         window_background = tkinter.Label(self.__main_window)
         window_background.config(image=self.__window_background_img)
         window_background.place(relwidth=1, relheight=1)
-        button1 = tkinter.Button(self.__main_window, text='1', command=lambda: self.click(1),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button1 = tkinter.Button(self.__main_window, text='1', command=lambda: self.click(0),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button1.place(relx=0.547, rely=0.943, anchor=tkinter.CENTER)
-        button2 = tkinter.Button(self.__main_window, text='2', command=lambda: self.click(2),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button2 = tkinter.Button(self.__main_window, text='2', command=lambda: self.click(1),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button2.place(relx=0.5815, rely=0.943, anchor=tkinter.CENTER)
-        button3 = tkinter.Button(self.__main_window, text='3', command=lambda: self.click(3),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button3 = tkinter.Button(self.__main_window, text='3', command=lambda: self.click(2),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button3.place(relx=0.616, rely=0.943, anchor=tkinter.CENTER)
-        button4 = tkinter.Button(self.__main_window, text='4', command=lambda: self.click(4),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button4 = tkinter.Button(self.__main_window, text='4', command=lambda: self.click(3),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button4.place(relx=0.6505, rely=0.943, anchor=tkinter.CENTER)
-        button5 = tkinter.Button(self.__main_window, text='5', command=lambda: self.click(5),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button5 = tkinter.Button(self.__main_window, text='5', command=lambda: self.click(4),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button5.place(relx=0.685, rely=0.943, anchor=tkinter.CENTER)
-        button6 = tkinter.Button(self.__main_window, text='6', command=lambda: self.click(6),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button6 = tkinter.Button(self.__main_window, text='6', command=lambda: self.click(5),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button6.place(relx=0.7195, rely=0.943, anchor=tkinter.CENTER)
-        button7 = tkinter.Button(self.__main_window, text='7', command=lambda: self.click(7),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button7 = tkinter.Button(self.__main_window, text='7', command=lambda: self.click(6),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button7.place(relx=0.754, rely=0.943, anchor=tkinter.CENTER)
-        button8 = tkinter.Button(self.__main_window, text='8', command=lambda: self.click(8),
-                                 compound=tkinter.CENTER, image=self.__pixel, width=20, height=30)
+        button8 = tkinter.Button(self.__main_window, text='8', command=lambda: self.click(7),
+                                 compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button8.place(relx=0.7885, rely=0.943, anchor=tkinter.CENTER)
         volume_button1 = tkinter.Button(self.__main_window, text='-', command=lambda: self.volume(1),
-                                        compound=tkinter.CENTER, image=self.__pixel, width=10, height=45)
+                                        compound=tkinter.CENTER, image=self.__pixel, width=1, height=20)
         volume_button1.place(relx=0.836, rely=0.947, anchor=tkinter.CENTER)
         volume_button2 = tkinter.Button(self.__main_window, text='+', command=lambda: self.volume(2),
-                                        compound=tkinter.CENTER, image=self.__pixel, width=10, height=45)
+                                        compound=tkinter.CENTER, image=self.__pixel, width=1, height=20)
         volume_button2.place(relx=0.864, rely=0.947, anchor=tkinter.CENTER)
-        self.__lcd = tkinter.Label(self.__main_window, bg='grey', text=self.__text_var, width=86, height=11)
+        self.__lcd = tkinter.Label(self.__main_window, bg='grey', text=self.__text_var, width=57, height=7)
         self.__lcd.place(relx=0.718, rely=0.24, anchor=tkinter.CENTER)
 
         for i in range(8):
-            led = tkinter.Label(self.__main_window, bg="#003200", image=self.__pixel, width=10, height=20)
+            led = tkinter.Label(self.__main_window, bg="#003200", image=self.__pixel, width=8, height=15)
             self.__led.append(led)
             led.place(relx=0.4207 + i * 0.0174, rely=0.573, anchor=tkinter.CENTER)
 
-        self.__rgb = tkinter.Label(self.__main_window, bg="#ffff9f", image=self.__pixel, width=50, height=50)
+        self.__rgb = tkinter.Label(self.__main_window, bg="#ffff9f", image=self.__pixel, width=35, height=35)
         self.__rgb.place(relx=0.587, rely=0.549, anchor=tkinter.CENTER)
         l1 = asyncio.get_event_loop()
         l2 = asyncio.get_event_loop()
@@ -82,12 +82,7 @@ class Evb(tkinter.Frame):
 
     def click(self, number):
         "przyciski"
-        if number == 1:
-            for i in self.__led:
-                i.config(bg="#00ff00")
-        if number == 2:
-            for i in self.__led:
-                i.config(bg="#ff00ff")
+        self.f4(number)
 
     def volume(self, what):
         "ustawianie audio , what(-/=)"
@@ -133,4 +128,12 @@ class Evb(tkinter.Frame):
             r = r.decode("utf-8")
             self.__text_var = r
             self.__lcd.config(text=self.__text_var)
+            BLOCK = True
+
+    def f4(self, number):
+        global BLOCK
+        if BLOCK:
+            BLOCK = False
+            self.__connection.send(bytes("4{}".format(number), "utf-8"))
+            r = self.__connection.recv(1024)
             BLOCK = True
