@@ -59,10 +59,10 @@ class Evb(tkinter.Frame):
         button8 = tkinter.Button(self.__main_window, text='8', command=lambda: self.click(7),
                                  compound=tkinter.CENTER, image=self.__pixel, width=4, height=16)
         button8.place(relx=0.7885, rely=0.943, anchor=tkinter.CENTER)
-        volume_button1 = tkinter.Button(self.__main_window, text='-', command=lambda: self.volume(1),
+        volume_button1 = tkinter.Button(self.__main_window, text='-', command=lambda: self.f1(1),
                                         compound=tkinter.CENTER, image=self.__pixel, width=1, height=20)
         volume_button1.place(relx=0.836, rely=0.947, anchor=tkinter.CENTER)
-        volume_button2 = tkinter.Button(self.__main_window, text='+', command=lambda: self.volume(2),
+        volume_button2 = tkinter.Button(self.__main_window, text='+', command=lambda: self.f1(2),
                                         compound=tkinter.CENTER, image=self.__pixel, width=1, height=20)
         volume_button2.place(relx=0.864, rely=0.947, anchor=tkinter.CENTER)
         self.__lcd = tkinter.Label(self.__main_window, bg='grey', text=self.__text_var, width=57, height=7)
@@ -84,14 +84,11 @@ class Evb(tkinter.Frame):
         "przyciski"
         self.f4(number)
 
-    def volume(self, what):
-        "ustawianie audio , what(-/=)"
-
     async def led_loop(self):
         while True:
             try:
                 self.f2()
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.5)
             except Exception as e:
                 pass
 
@@ -102,6 +99,16 @@ class Evb(tkinter.Frame):
                 await asyncio.sleep(1)
             except Exception as e:
                 pass
+
+    def f1(self, what):
+        "ustawianie audio , what(-/=)"
+
+        global BLOCK
+        if BLOCK:
+            BLOCK = False
+            self.__connection.send(bytes(f"1{what}", "utf-8"))
+            r = self.__connection.recv(1024)
+            BLOCK = True
 
     def f2(self):
         global BLOCK
@@ -126,7 +133,7 @@ class Evb(tkinter.Frame):
             self.__connection.send(bytes("3", "utf-8"))
             r = self.__connection.recv(1024)
             r = r.decode("utf-8")
-            self.__text_var = r
+            self.__text_var = r[1:]
             self.__lcd.config(text=self.__text_var)
             BLOCK = True
 
