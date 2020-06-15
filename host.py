@@ -54,7 +54,10 @@ def functions(message):
         subprocess.run(commands[number], shell=True)
         return "4"
     if f == 5:
-        pass
+        with open("description", "r") as file:
+            text = file.read()
+        os.remove("description")
+        return "5"
     if f == 6:
         gamma = 2.2
         screenshot = pyautogui.screenshot()
