@@ -31,6 +31,9 @@ class Evb(tkinter.Frame):
     def th2(self, loop2):
         loop2.run_until_complete(self.text_loop())
 
+    def th3(self, loop3):
+        loop3.run_until_complete(self.rgb_loop())
+
     def loop(self):
         window_background = tkinter.Label(self.__main_window)
         window_background.config(image=self.__window_background_img)
@@ -77,8 +80,10 @@ class Evb(tkinter.Frame):
         self.__rgb.place(relx=0.587, rely=0.549, anchor=tkinter.CENTER)
         l1 = asyncio.get_event_loop()
         l2 = asyncio.get_event_loop()
+        l3 = asyncio.get_event_loop()
         threading.Thread(target=self.th, args=(l1,)).start()
         threading.Thread(target=self.th2, args=(l2,)).start()
+        threading.Thread(target=self.th3, args=(l3,)).start()
 
     def click(self, number):
         "przyciski"
@@ -88,7 +93,15 @@ class Evb(tkinter.Frame):
         while True:
             try:
                 self.f2()
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(0.2)
+            except Exception as e:
+                pass
+
+    async def rgb_loop(self):
+        while True:
+            try:
+                self.f6()
+                await asyncio.sleep(1)
             except Exception as e:
                 pass
 
@@ -96,7 +109,7 @@ class Evb(tkinter.Frame):
         while True:
             try:
                 self.f3()
-                await asyncio.sleep(1)
+                await asyncio.sleep(1.5)
             except Exception as e:
                 pass
 
@@ -107,7 +120,7 @@ class Evb(tkinter.Frame):
         if BLOCK:
             BLOCK = False
             self.__connection.send(bytes(f"1{what}", "utf-8"))
-            r = self.__connection.recv(1024)
+            r = self.__connection.recv(64)
             BLOCK = True
 
     def f2(self):
@@ -116,22 +129,22 @@ class Evb(tkinter.Frame):
         if BLOCK:
             BLOCK = False
             self.__connection.send(bytes("2", "utf-8"))
-            r = self.__connection.recv(1024)
+            r = self.__connection.recv(64)
             r.decode("utf-8")
             vol = r[1:]
+            temp = round(8 * int(vol) / 100)
+            for led in range(temp):
+                self.__led[led].config(bg="#00ff00")
+            for led in range(temp, len(self.__led)):
+                self.__led[led].config(bg="#003200")
             BLOCK = True
-        temp = round(8 * int(vol) / 100)
-        for led in range(temp):
-            self.__led[led].config(bg="#00ff00")
-        for led in range(temp, len(self.__led)):
-            self.__led[led].config(bg="#003200")
 
     def f3(self):
         global BLOCK
         if BLOCK:
             BLOCK = False
             self.__connection.send(bytes("3", "utf-8"))
-            r = self.__connection.recv(1024)
+            r = self.__connection.recv(64)
             r = r.decode("utf-8")
             self.__text_var = r[1:]
             self.__lcd.config(text=self.__text_var)
@@ -142,5 +155,15 @@ class Evb(tkinter.Frame):
         if BLOCK:
             BLOCK = False
             self.__connection.send(bytes("4{}".format(number), "utf-8"))
-            r = self.__connection.recv(1024)
+            r = self.__connection.recv(64)
+            BLOCK = True
+
+    def f6(self):
+        global BLOCK
+        if BLOCK:
+            BLOCK = False
+            self.__connection.send(bytes("6", "utf-8"))
+            color = self.__connection.recv(64)
+            color = color.decode("utf-8")
+            self.__rgb.config(bg=color)
             BLOCK = True

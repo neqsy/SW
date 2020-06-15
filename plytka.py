@@ -2,7 +2,7 @@ import evb
 import socket
 import tkinter
 
-PORT = 65002  # The port used by the server
+PORT = 65000  # The port used by the server
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as board_socket:

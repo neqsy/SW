@@ -1,8 +1,10 @@
 import socket
 import subprocess
+import numpy as np
+import pyautogui
 import os
 
-PORT = 65002
+PORT = 65000
 
 
 def functions(message):
@@ -54,7 +56,20 @@ def functions(message):
     if f == 5:
         pass
     if f == 6:
-        pass
+        gamma = 2.2
+        screenshot = pyautogui.screenshot()
+        im = np.array(screenshot)
+        width, height, depth = im.shape
+        color = tuple(np.average(im.reshape(width * height, depth), axis=0))
+        red = int(255 * (color[0] / 255) ** (1 / gamma))
+        red = hex(red).lstrip("0x")
+        green = int(255 * (color[1] / 255) ** (1 / gamma))
+        green = hex(green).lstrip("0x")
+        blue = int(255 * (color[2] / 255) ** (1 / gamma))
+        blue = hex(blue).lstrip("0x")
+        colors = '#' + str(red) + str(green) + str(blue)
+        print(colors)
+        return colors
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as host_socket:
@@ -65,13 +80,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as host_socket:
         print('Connected by', address)
         data = ''
         while True:
-            msg = connection.recv(1024)
-            #print(msg)
+            msg = connection.recv(64)
+            print(msg)
             msg = msg.decode("utf-8")
-            #print(msg)
+            print(msg)
             data += msg
             if len(data) > 0:
                 func = functions(data)
                 to_send = "{}".format(func)
+                print(to_send)
                 connection.send(bytes(to_send, "utf-8"))
                 data = ''
