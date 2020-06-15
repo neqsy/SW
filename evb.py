@@ -157,7 +157,18 @@ class Evb(tkinter.Frame):
             self.__connection.send(bytes("4{}".format(number), "utf-8"))
             r = self.__connection.recv(64)
             BLOCK = True
-
+            
+    def f5(self):
+    global BLOCK
+        if BLOCK:
+            BLOCK = False
+            self.__connection.send(bytes("5", "utf-8"))
+            r = self.__connection.recv(64)
+            r = r.decode("utf-8")
+            self.__text_var = r[1:]
+            self.__lcd.config(text=self.__text_var)
+            BLOCK = True
+            
     def f6(self):
         global BLOCK
         if BLOCK:
